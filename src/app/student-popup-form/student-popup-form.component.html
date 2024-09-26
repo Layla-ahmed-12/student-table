@@ -1,0 +1,54 @@
+<div class="modal-header">
+  <h4 class="modal-title">{{ mode === 'edit' ? 'Edit Student' : 'Add Student' }}</h4>
+  <button type="button" class="close" (click)="bsModalRef.hide()">&times;</button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="studentForm" (ngSubmit)="save()" class="student-form">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" id="name" formControlName="name" class="form-control">
+      <div *ngIf="studentForm.get('name').touched && studentForm.get('name').invalid">
+        <small class="alert alert-danger" role="alert" *ngIf="studentForm.get('name').hasError('required')">Please enter your name</small>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" formControlName="email" class="form-control">
+      <div *ngIf="studentForm.get('email').touched && studentForm.get('email').invalid">
+        <small class="alert alert-danger" role="alert" *ngIf="studentForm.get('email').hasError('required')">Please enter an email address</small>
+        <small class="alert alert-danger" role="alert" *ngIf="studentForm.get('email').hasError('email')">Please enter a valid email address</small>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="age">Age</label>
+      <input type="number" id="age" formControlName="age" class="form-control" [readonly]="true">
+    </div>
+    <div class="form-group">
+      <label for="dob">Date of Birth</label>
+      <input formControlName="dob" class="form-control" [owlDateTimeTrigger]="dt1" [owlDateTime]="dt1" placeholder="Choose date" (change)="calculateAge()">
+      <owl-date-time [pickerType]="'calendar'" #dt1></owl-date-time>
+      <div *ngIf="studentForm.get('dob').touched && studentForm.get('dob').invalid">
+        <small class="alert alert-danger" role="alert" *ngIf="studentForm.get('dob').hasError('required')">Please choose a valid date</small>
+      </div>
+    </div>
+    <div class="form-group gender-container">
+      <label>Gender</label>
+      <ng-select 
+        formControlName="gender" 
+        [placeholder]="!studentForm.get('gender').value ? 'Select Gender' : ''"
+        [clearable]="false"
+        name="gender"
+        required>
+        <ng-option *ngFor="let gender of ['Male', 'Female']" [value]="gender">
+          {{ gender }}
+        </ng-option>
+      </ng-select>
+      <div *ngIf="studentForm.get('gender').touched && studentForm.get('gender').invalid">
+        <small class="alert alert-danger" role="alert">Please select a gender</small>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" [disabled]="studentForm.invalid" (click)="save()">Save</button>
+</div>
